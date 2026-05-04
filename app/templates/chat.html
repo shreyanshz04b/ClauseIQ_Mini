@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block auth_mode %}any{% endblock %}
+{% block body %}
+<div class="min-h-screen relative overflow-hidden bg-[linear-gradient(0deg,rgba(4,7,19,0.65),rgba(4,7,19,0.65)),radial-gradient(circle_at_20%_80%,rgba(100,120,255,0.18),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,190,110,0.16),transparent_30%),linear-gradient(130deg,#061127_0%,#0a1836_55%,#0a0f1c_100%)]">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-35 bg-[repeating-linear-gradient(0deg,rgba(255,255,255,0.03)_0,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_34px),repeating-linear-gradient(90deg,rgba(255,255,255,0.025)_0,rgba(255,255,255,0.025)_1px,transparent_1px,transparent_34px)]"></div>
+  <!-- Header -->
+  <header class="h-[78px] border-b border-white/10 bg-[rgba(7,10,22,0.9)] backdrop-blur relative z-10">
+    <div class="max-w-6xl mx-auto px-6 h-full flex items-center justify-between">
+      <h1 class="text-lg tracking-[0.08em] font-bold text-slate-100">ClauseIQ</h1>
+      <nav class="flex items-center gap-6 text-sm whitespace-nowrap">
+        <a href="/" class="text-slate-300 hover:text-white transition">Home</a>
+        <a href="/chat" class="text-slate-300 hover:text-white transition">Legal AI</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10 relative z-10">
+    <div class="mb-8 text-center">
+      <h2 id="chatGreetingTitle" class="text-3xl font-bold text-white mb-2"></h2>
+      <p id="chatGreetingSub" class="text-slate-300"></p>
+    </div>
+
+    <div class="lg:grid lg:grid-cols-1 lg:gap-6">
+      <!-- Chat Section -->
+      <section class="lg:col-span-1">
+        <div class="border border-white/15 rounded-[20px] bg-[rgba(5,11,28,0.56)] shadow-[0_26px_80px_rgba(0,0,0,0.35)] p-6 h-[70vh] flex flex-col">
+          <div id="chatBox" class="flex-1 overflow-y-auto mb-6 space-y-4" role="log" aria-label="Chat messages"></div>
+          
+          <form id="chatForm" class="border-t border-white/10 pt-4">
+            <div class="flex gap-2 mb-2">
+              <button 
+                id="uploadTrigger" 
+                type="button" 
+                class="p-2 text-slate-300 hover:bg-slate-800/70 rounded-lg transition"
+                title="Upload document (PDF or DOCX)"
+                aria-label="Upload document">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+              </button>
+              <input 
+                id="chatFileInput" 
+                name="file" 
+                type="file" 
+                accept=".pdf,.docx" 
+                class="hidden" 
+                aria-label="Select file to upload" />
+              <input 
+                name="query" 
+                class="flex-1 px-4 py-2 border border-white/15 bg-slate-950/65 text-slate-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                placeholder="Type your legal question..."
+                autocomplete="off"
+                aria-label="Chat message input"
+                spellcheck="true" />
+              <button type="submit" class="bg-amber-500 text-slate-900 px-4 py-2 rounded-lg hover:bg-amber-400 transition font-semibold" title="Send message" aria-label="Send message">
+                Send
+              </button>
+            </div>
+            <p id="chatStatus" class="text-xs text-slate-400 h-4" role="status" aria-live="polite"></p>
+          </form>
+
+          <!-- Documents Section -->
+          <div class="mt-6 pt-4 border-t border-white/10">
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <h3 class="text-sm font-semibold text-slate-100">Documents</h3>
+              <button 
+                id="refreshDocs" 
+                class="text-xs px-2.5 py-1 text-amber-300 hover:bg-slate-800/70 rounded transition"
+                title="Refresh documents list"
+                aria-label="Refresh documents">
+                Refresh
+              </button>
+            </div>
+            <div id="docsList" class="max-h-32 overflow-y-auto space-y-2 text-sm" role="region" aria-label="Documents list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  (function () {
+    const greetings = [
+      {
+        
+        title: "Hi, I am Rudra",
+        sub: "Ask anything about your uploaded documents or Indian legal procedures.",
+      }
+    
+     
+    
+    ];
+
+    const choice = greetings[Math.floor(Math.random() * greetings.length)];
+    const tagEl = document.getElementById("chatGreetingTag");
+    const titleEl = document.getElementById("chatGreetingTitle");
+    const subEl = document.getElementById("chatGreetingSub");
+
+    if (tagEl) tagEl.textContent = choice.tag;
+    if (titleEl) titleEl.textContent = choice.title;
+    if (subEl) subEl.textContent = choice.sub;
+  })();
+</script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
